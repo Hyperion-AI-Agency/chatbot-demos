@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Ecommerce</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        header {
+            background-color: #fff;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f47983;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .navbar {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar .menu {
+            display: flex;
+            gap: 15px;
+        }
+        .menu a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .menu a:hover {
+            background-color: #555;
+        }
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .product {
+            background-color: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .product:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+        }
+        .product img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 5px 5px 0 0;
+        }
+        .product-info {
+            padding: 20px;
+        }
+        .product-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+        .product-price {
+            font-size: 1.3rem;
+            color: #f47983;
+            margin-bottom: 20px;
+        }
+        .add-to-cart {
+            background-color: #f47983;
+            color: #fff;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .add-to-cart:hover {
+            background-color: #e56b7a;
+        }
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .footer p {
+            margin: 0;
+        }
+        /* Cart Modal Styles */
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .cart-content {
+            background-color: #fff;
+            width: 80%;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+        .close-cart {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+        .cart-items {
+            list-style-type: none;
+            padding: 0;
+        }
+        .cart-item {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .cart-item button {
+            background-color: #f47983;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .cart-item button:hover {
+            background-color: #e56b7a;
+        }
+        .cart-total {
+            font-size: 1.2rem;
+            margin-top: 20px;
+            text-align: right;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
+        .btn-primary {
+            background-color: #f47983;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: #e56b7a;
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #f47983;
+            color: #f47983;
+        }
+        .btn-outline:hover {
+            background-color: #f47983;
+            color: #fff;
+        }
+        @media (max-width: 768px) {
+            .product-list {
+                grid-template-columns: 1fr;
+            }
+            .product img {
+                border-radius: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">Beauty</div>
+        </div>
+    </header>
+
+    <div class="navbar">
+        <div class="container">
+            <div class="menu">
+                <a href="#" class="btn btn-outline">Home</a>
+                <a href="#" class="btn btn-outline">Shop</a>
+                <a href="#" class="btn btn-outline">About</a>
+                <a href="#" class="btn btn-outline">Contact</a>
+                <button class="btn btn-primary" onclick="openCart()"><i class="fas fa-shopping-cart"></i> Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="product-list" id="productList">
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <span class="close-cart" onclick="closeCart()">&times;</span>
+            <h2>Your Cart</h2>
+            <ul class="cart-items" id="cartItems">
+                <!-- Cart Items will be added here -->
+            </ul>
+            <div class="cart-total" id="cartTotal">
+                Total: $0.00
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2024 Beauty Ecommerce. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Product Array
+        const products = [
+            {
+                name: "Plush Puddin’ Intensive Recovery Lip Mask",
+                price: 29.99,
+                image: "https://www.refinery29.com/images/11238241.jpg?format=webp&width=&height=&quality=85"
+            },
+            {
+                name: "BeachPlease Luminous Tinted Lip + Cheek Balm",
+                price: 39.99,
+                image: "https://cdn.shopify.com/s/files/1/0270/5601/3415/products/Golden-Hour-Sand-BG-1024_1024x1024.png?v=1588929423"
+            },
+            {
+                name: "Lip Power Satin Long Lasting Lipstick",
+                price: 49.99,
+                image: "https://www.armanibeauty.com.my/assets/product-images/3614273725835-1657185578-km.jpg"
+            },
+            {
+                name: "100% Organic Cold-Pressed Rose Hip Seed Oil",
+                price: 29.99,
+                image: "https://www.spacenk.com/dw/image/v2/ABCE_PRD/on/demandware.static/-/Sites-spacenkmastercatalog/default/dwd8b6fd3b/products/ORDINARY/UK200029808_ORDINARY.jpg?sw=582&sh=582"
+            },
+            {
+                name: "Niacinamide Oil Control Serum",
+                price: 39.99,
+                image: "https://cdn.shopify.com/s/files/1/0428/8498/9091/articles/Congestion_1220_x_890px_452x350_crop_center.jpg?v=1649160720"
+            },
+            {
+                name: "JuiceBalm Vegan Tinted Lip Balm",
+                price: 49.99,
+                image: "https://shop.goop-img.com/cdn-cgi/image/height=300,width=300,dpr=3,format=auto,onerror=redirect,metadata=copyright/spree/images/attachments/000/086/934/large/open-uri20230125-19173-1lwh55k?version=1674688884.webp"
+            },
+            {
+                name: "Hydration Shampoo",
+                price: 29.99,
+                image: "https://shop.goop-img.com/cdn-cgi/image/height=300,width=300,dpr=3,format=auto,onerror=redirect,metadata=copyright/spree/images/attachments/000/057/618/large/open-uri20200409-8115-1lsorco?version=1586448788.webp"
+            },
+            {
+                name: "Cold Processed Hair Oil",
+                price: 39.99,
+                image: "https://shop.goop-img.com/cdn-cgi/image/height=300,width=300,dpr=3,format=auto,onerror=redirect,metadata=copyright/spree/images/attachments/000/078/597/large/open-uri20220520-25810-174gei8?version=1653075904.webp"
+            },
+            {
+                name: "GOOPGLOW Everyday Glow Multivitamin",
+                price: 49.99,
+                image: "https://shop.goop-img.com/cdn-cgi/image/height=300,width=300,dpr=3,format=auto,onerror=redirect,metadata=copyright/spree/images/attachments/000/077/802/large/open-uri20220419-20570-2mhqw6?version=1650395790.webp"
+            },
+            {
+                name: "Paradiso Eau de Parfum",
+                price: 29.99,
+                image: "https://shop.goop-img.com/cdn-cgi/image/height=300,width=300,dpr=3,format=auto,onerror=redirect,metadata=copyright/spree/images/attachments/000/077/216/large/open-uri20220331-10-1bvh348?version=1648748940.webp"
+            },
+            {
+                name: "Dirty Coconut, 50mL",
+                price: 39.99,
+                image: "https://shop.goop-img.com/cdn-cgi/image/height=300,width=300,dpr=3,format=auto,onerror=redirect,metadata=copyright/spree/images/attachments/000/073/605/large/open-uri20211109-19365-8tdxfk?version=1636485576.webp"
+            },
+            {
+                name: "No.02 Le Long Fond Perfume Oil",
+                price: 49.99,
+                image: "https://shop.goop-img.com/cdn-cgi/image/height=300,width=300,dpr=3,format=auto,onerror=redirect,metadata=copyright/spree/images/attachments/000/084/299/large/open-uri20221026-22-1tjng15?version=1666761649.webp"
+            }
+        ];
+
+        // Generate Product Cards
+        const productList = document.getElementById('productList');
+
+        products.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product';
+            productCard.innerHTML = `
+                <img src="${product.image}" alt="${product.name}">
+                <div class="product-info">
+                    <h2 class="product-title">${product.name}</h2>
+                    <p class="product-price">$${product.price.toFixed(2)}</p>
+                    <button class="btn btn-primary" onclick="addToCart('${product.name}', ${product.price})">Add to Cart</button>
+                </div>
+            `;
+            productList.appendChild(productCard);
+        });
+    </script>
+
+    <script>
+        let cart = [];
+
+        function addToCart(productName, price) {
+            const item = { name: productName, price: price };
+            cart.push(item);
+            updateCart();
+            alert(`${productName} added to cart!`);
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            let total = 0;
+
+            cartItems.innerHTML = '';
+            cart.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.classList.add('cart-item');
+                li.innerHTML = `
+                    <span>${item.name}</span>
+                    <button onclick="removeFromCart(${index})">Remove</button>
+                `;
+                cartItems.appendChild(li);
+                total += item.price;
+            });
+
+            cartTotal.textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function openCart() {
+            const modal = document.getElementById('cartModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeCart() {
+            const modal = document.getElementById('cartModal');
+            modal.style.display = 'none';
+        }
+    </script>
+
+    <script type="text/javascript">
+        (function(d, t) {
+            var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            v.onload = function() {
+              window.voiceflow.chat.load({
+                verify: { projectID: '661ea41dec2e46d65982dba7' },
+                url: 'https://general-runtime.voiceflow.com',
+                versionID: 'production'
+              });
+            }
+            v.src = "https://cdn.voiceflow.com/widget/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+        })(document, 'script');
+      </script>
+
+</body>
+</html>
